@@ -1,0 +1,61 @@
+{
+    "jpsVersion": "0.1",
+    "jpsType": "update",
+    "application": {
+        "categories": [
+            "apps/dev-tools"
+        ],
+        "targetNodes": {
+            "nodeGroup": [
+                "cp"
+            ]
+        },
+        "id": "Systemd-journaldsf",
+        "name": "Systemd-journald",
+        "logo": "",
+        "version": "1.0",
+        "homepage": "https://www.scaleforce.net",
+        "description": {
+            "short": "Limit systemd at 50MB",
+            "en": "Limit systemd at 50MB"
+        },
+        "onUninstall": {
+            "call": [
+                "unInstall"
+            ]
+        },
+        "onInstall": {
+            "call": [
+                "onInstallAction"
+            ]
+        },
+        "procedures": [{
+            "id": "unInstall",
+            "onCall": [{
+                "executeShellCommands": [{
+                    "nodeType": "cp",
+                    "commands": [
+                        "sed -i 's/SystemMaxUse=50M/#SystemMaxUse=/g' /etc/systemd/journald.conf",
+                        "systemctl restart systemd-journald"
+                    ],
+                    "user": "root"
+                }]
+            }]
+        },{
+            "id": "onInstallAction",
+            "onCall": [{
+                "executeShellCommands": [{
+                    "nodeType": "cp",
+                    "commands": [
+                        "sed -i 's/#SystemMaxUse=/SystemMaxUse=50M/g' /etc/systemd/journald.conf",
+                        "systemctl restart systemd-journald"
+                    ],
+                    "user": "root"
+                }]
+            }]
+        }],
+        "success": {
+            "text": "Systemd Journald configuration is updated"
+        }
+    }
+}
